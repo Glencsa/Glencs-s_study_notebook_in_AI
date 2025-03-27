@@ -311,3 +311,15 @@ CSR格式通过三个数组来表示稀疏矩阵：
 values：包含所有非零元素的值。
 column indices：包含与每个非零元素对应的列索引。
 row pointer：包含一个指针数组，其中每个元素表示该行的起始非零元素在values和column indices中的索引。
+
+### 3月26学习日记
+#### 算子的分类
+1. 正常的通用算子(包括前向和反向)
+2. sparse OP :该算子支持稀疏矩阵，存储方式不一样，分为coo和csr两种存储类型
+3. 字符串算子：正常的算子都是处理矩阵数据信息(Tensor)，该算子处理字符串数据信息
+4. fused_op: 融合算子，将多个算子融合成一个算子，减少内存拷贝，提高效率
+5. 还有一些动态图静态图不一致的算子，需要区分，分开实现
+
+#### pylayer 是什么？
+pylayer(paddle.autograd.PyLayer) 是 PaddlePaddle 中的一种 Python 自定义算子（Custom Op） 机制，它允许用户用 纯 Python 代码 自定义前向和反向计算，而不需要使用 C++ 或 CUDA 编写算子。
+与pytorch中的torch.autograd.Function功能相似
