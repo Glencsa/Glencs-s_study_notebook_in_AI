@@ -312,6 +312,10 @@ values：包含所有非零元素的值。
 column indices：包含与每个非零元素对应的列索引。
 row pointer：包含一个指针数组，其中每个元素表示该行的起始非零元素在values和column indices中的索引。
 
+#### inplace op 
+inplace（就地）操作指的是直接修改输入数据，而不是创建新的输出张量。
+
+
 ### 3月26学习日记
 #### 算子的分类
 1. 正常的通用算子(包括前向和反向)
@@ -323,3 +327,13 @@ row pointer：包含一个指针数组，其中每个元素表示该行的起始
 #### pylayer 是什么？
 pylayer(paddle.autograd.PyLayer) 是 PaddlePaddle 中的一种 Python 自定义算子（Custom Op） 机制，它允许用户用 纯 Python 代码 自定义前向和反向计算，而不需要使用 C++ 或 CUDA 编写算子。
 与pytorch中的torch.autograd.Function功能相似
+
+### 3月27日实习日记
+关于mask attention 和 KV cache 相关知识点理解
+#### mask attention
+为什么训练和推理的过程中都需要用到mask_attention，大语言模型的输出结果是递增生成的，这样是为了防止训练过程中用到了后面的结果而造成训练过程中的作弊。因为你计算loss的时候是利用每一个预测token的loss的和，所以前面的token同样不能使用后面的数据，这样会导致整体的loss结果偏低，低的不真实。
+
+推理过程中，就是为了保持前后生成的一致性，不然每次生成token时，前面生成的token也会不一样。
+
+#### 关于KV cache
+一般用于在大模型推理过程中，我们每得到一个token，来预测下一个token时，都要重新计算前面所有的token的注意力，这其实是没必要的，被预测的token的值之和最后一个token的Q 和前面所有token的KV有关，所以只需要缓存下来前面所有的KV矩阵，即可不用重新计算，而推理得到预测的token，大大减少了计算量，但其实缓存使用并没有降多少，因为你不管计不计算，都要用到KV矩阵，只是如果不用KV cache的话，需要加载所有的QKV重新加载计算一遍，比使用KV cache 多加载了所有的QKV，而KV cache 只需要加载预测token的前一个token 的QKV即可，不需要之前全部token重新加载了。
