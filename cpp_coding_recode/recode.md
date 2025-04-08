@@ -5,7 +5,10 @@ vec.clear()
 vec.erase(vec.begin(), vec.end())
 ```
 vector删除最后一个元素，可以使用pop_back()，和push_back()是对应的
-
+```
+vec.pop_back()
+vec.erase(vec.end()-1);
+```
 
 ### 首尾指针的使用方法
 遍历的首尾指针的时候一般都是使用while循环，假设首指针i，尾指针j，则循环一般写为：
